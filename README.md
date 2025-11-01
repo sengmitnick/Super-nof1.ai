@@ -264,7 +264,7 @@ npm install
    # 数据库配置
    # ==========================================
    # 格式：postgresql://用户名:密码@主机:端口/数据库名
-   DATABASE_URL="postgresql://trading_user:(your_secure_password)@localhost:5432/nof1"
+   **DATABASE_URL="postgresql://trading_user:(your_secure_password)@localhost:5432/nof1"**
    #(your_secure_password)里面填入密码(去掉括号，括号是为好看),(nof1)可以替换成为你的数据库名称
   
    # 代理配置（在中国大陆访问需要代理并且需要非中非美ip）
@@ -281,13 +281,13 @@ npm install
 
    
    # 虚拟盘 API 配置
-   BINANCE_TESTNET_API_KEY="你的虚拟盘API密钥"
-   BINANCE_TESTNET_API_SECRET="你的虚拟盘API密钥Secret"
+   **BINANCE_TESTNET_API_KEY="你的虚拟盘API密钥"
+   BINANCE_TESTNET_API_SECRET="你的虚拟盘API密钥Secret"**
    BINANCE_TESTNET_BASE_URL="https://demo-fapi.binance.com"
    #API需要保留引号！
    # 实盘 API 配置
-   BINANCE_LIVE_API_KEY="你的实盘API密钥"
-   BINANCE_LIVE_API_SECRET="你的实盘API密钥Secret"
+   **BINANCE_LIVE_API_KEY="你的实盘API密钥"
+   BINANCE_LIVE_API_SECRET="你的实盘API密钥Secret"**
    BINANCE_LIVE_BASE_URL="https://fapi.binance.com"
 
    #请求超时时间（建议不动，已经过测试）
@@ -309,7 +309,7 @@ npm install
    # AI 模型配置
    # ==========================================
    # DeepSeek API Key（推荐）
-   DEEPSEEK_API_KEY="你的DeepSeek密钥"
+ **  DEEPSEEK_API_KEY="你的DeepSeek密钥"**
 
    # ==========================================
    # 应用配置（必需）
