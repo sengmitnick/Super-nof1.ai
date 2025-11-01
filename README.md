@@ -255,7 +255,7 @@ npm install
    cp .env.example .env
    ```
 
-2. **编辑 `.env` 文件**
+2. **编辑 `.env` 文件（配置数据库，币安四个key，交易模式和deepseek api key）**
 
    使用任意文本编辑器打开 `.env` 文件，填写以下配置：
 
@@ -309,7 +309,7 @@ npm install
    # AI 模型配置
    # ==========================================
    # DeepSeek API Key（推荐）
- **  DEEPSEEK_API_KEY="你的DeepSeek密钥"**
+   **  DEEPSEEK_API_KEY="你的DeepSeek密钥"**
 
    # ==========================================
    # 应用配置（必需）
