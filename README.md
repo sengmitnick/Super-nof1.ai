@@ -1,6 +1,6 @@
 # Super NOF1.ai - AI 驱动的加密货币交易系统
 
-一个基于人工智能的自动化加密货币期货交易系统，使用 Next.js 构建，集成币安期货 API 和 DeepSeek AI 模型。
+inspired by alpha arena和open-nof1.ai项目，本项目在open-nof1.ai基础之上全面改进，一个基于人工智能的自动化加密货币期货交易系统，使用 Next.js 构建，集成币安期货 API 和 DeepSeek AI 模型。之后我们将对算法、prompt、模型、分析方法和交易逻辑进行全面改进，欢迎持续关注！
 
 ## 核心特性
 
@@ -434,6 +434,7 @@ model LessonLearned {
 
 欢迎提交 Issue 和 Pull Request！
 联系方式：email:2731468336@qq.com
+
 
 
 ## 📄 许可证
