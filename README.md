@@ -2,6 +2,19 @@
 
 inspired by alpha arena和open-nof1.ai项目，本项目在open-nof1.ai基础之上全面改进（prompt,数据获取，添加了反馈逻辑，优化了Ui页面和图标显示），一个基于人工智能的自动化加密货币期货交易系统，使用 Next.js 构建，集成币安期货 API 和 DeepSeek AI 模型。之后我们将对算法、prompt、模型、分析方法和交易逻辑进行全面改进，欢迎持续关注！
 
+## 更新
+11.3
+- 修改前端中trade小数精度不足不显示的问题，并添加内容
+- 修改前端chat一次输出五条信息的问题，现在只输出一条信息，节省空间
+
+  操作指南：
+  - 复制"lib\ai\run.ts"   "prisma\schma.prisma"  "component\models_view.tsx"三个文件到本地覆盖原文件
+  - 更新数据库在命令行中执行：
+    ```
+    npx prisma db push
+    npx prisma generate
+    ```
+再运行 ``` npm run dev```即可使用
 ## pipeline
 交易逻辑：从官方api调取实时市场数据，每三分钟调用一次deepseek LLMs api，大模型经过精心准备输入的prompt，给出分析之后的策略，调用交易所api进行交易
 
