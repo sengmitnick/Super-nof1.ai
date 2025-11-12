@@ -1,3 +1,489 @@
+---
+
+[English Version](#english-content) | [中文版本](#中文内容)
+
+---
+
+
+## English Content
+# Super NOF1.ai - AI-driven cryptocurrency trading system
+
+Inspired by Alpha Arena and the open-nof1.ai project, this project comprehensively improves upon open-nof1.ai (prompt, data acquisition, added feedback logic, optimized UI and icon display). It's an AI-based automated cryptocurrency futures trading system built using Next.js, integrating the Binance Futures API and the DeepSeek AI model. We will be making further improvements to the algorithm, prompt, model, analysis methods, and trading logic. Stay tuned!
+
+## renew
+- Fixed the issue of insufficient decimal precision in the trade function not displaying in the front end, and added content.
+- Fixed the issue of the front-end chat outputting five messages at once; now it only outputs one message, saving space.
+Operating Instructions:
+
+Copy the five files "lib\ai\run.ts", "prisma\schma.prisma", "component\models_view.tsx", "app/api/cron/3-minutes-run-interval/route.ts", and "cron.ts" to your local machine, overwriting the original files.
+- Update the database by executing the command line:
+```
+npx prisma db push
+11.3
+npx prisma generate
+```
+Then run `npm run dev` to use it.
+## pipeline
+Trading logic: Real-time market data is retrieved from the official API. The DeepSeek LLMs API is called every three minutes. The large model receives a carefully prepared input prompt, provides an analyzed strategy, and then the exchange API is called to execute the trades.
+
+## Core Features
+
+### AI Trading Decisions
+- **Multi-model support:** Integration with DeepSeek Chat models for market analysis
+- **Technical Indicator Analysis**: Multi-dimensional analysis including RSI, MACD, EMA, and trading volume.
+- **Risk Management**: Automatic stop-loss and take-profit orders, dynamic leverage adjustment
+- **Learning Feedback:** Summarize experiences from historical trades and continuously optimize strategies.
+
+### Trading Function
+- **Automated Trading**: Supports simultaneous trading of multiple currencies (BTC, ETH, SOL, BNB, DOGE)
+- **Stop-Loss and Take-Profit Orders:** Automatically sets and manages stop-loss and take-profit orders.
+- **Position Management**: Real-time monitoring of position status and profit/loss.
+- **Risk Control**: Multi-layered Risk Protection Mechanism
+
+### Data Visualization
+- **Real-time Charts:** Key indicators such as account balance and yield.
+- **Trading History**: Complete trading records and AI decision logs
+- **Performance Analysis**: Statistics such as win rate, average profit/loss, and maximum drawdown.
+
+### Security Features
+- **Demo Trading**: Supports virtual trading platform testing (demo-fapi.binance.com)
+- **Live Trading Mode:** Allows switching to real trading.
+- **API Key Encryption**: Sensitive Information Environment Variable Management
+- **Proxy Support:** Supports accessing the Binance API via a proxy.
+
+---
+
+## System Requirements
+
+Before you begin, please ensure your system meets the following requirements:
+
+### Required Software
+- Node.js version 18.0 or later
+- npm or yarn package manager
+- PostgreSQL version 14.0 or later
+- **Git** (used for cloning projects)
+
+### Optional Software
+- **Proxy tools** (such as Clash, V2Ray) are used to access the Binance API.
+- VSCode or other code editors
+
+### Account Requirements
+- **Binance Account:** Requires registration and API key creation.
+- **DeepSeek API Key**: Used for AI functions (optional, can also be used with OpenRouter)
+
+---
+
+## Complete Installation Guide
+
+Step 1: Install Node.js
+
+Windows users:
+1. Visit the [Node.js official website](https://nodejs.org/)
+2. Download the LTS version (18.x or higher recommended).
+3. Run the installer and install using the default options.
+4. Open a command prompt to verify the installation:
+bash
+node --version
+npm --version
+```
+
+#### macOS users:
+Install using Homebrew:
+bash
+brew install node@18
+```
+
+#### Linux users:
+bash
+# Ubuntu/Debian
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verify Installation
+node --version
+npm --version
+```
+
+Step 2: Install the PostgreSQL database
+
+Windows users:
+
+1. **Download the installation package**
+- Visit the [PostgreSQL official website](https://www.postgresql.org/download/windows/)
+- Download the latest version of the installer (14.x or later).
+
+2. **Run the installer**
+- Double-click the installation file
+- Choose the installation path (the default is fine).
+- Set the superuser (postgres) password** (Please remember this password!)**
+- The port number uses the default 5432.
+- Select the default language environment
+
+3. **Verify Installation**
+bash
+# Open command prompt
+psql --version
+```
+
+4. **Configure environment variables** (if the psql command is unavailable)
+Right-click "This PC" → Properties → Advanced system settings → Environment Variables
+- Add the following to the system variable Path: `C:\Program Files\PostgreSQL\14\bin`
+
+#### macOS users:
+
+1. **Install using Homebrew**
+bash
+brew install postgresql@14
+brew services start postgresql@14
+```
+
+2. **Verify Installation**
+bash
+psql --version
+```
+
+#### Linux users:
+
+bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+
+# Start service
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# Verify Installation
+psql --version
+```
+
+Step 3: Create the database
+
+1. **Connect to PostgreSQL**
+
+**Windows:**
+bash
+# Open a command prompt and type:
+psql -U postgres
+# Enter the password you set during installation
+```
+
+**macOS/Linux:**
+bash
+sudo -u postgres psql
+```
+
+2. **Create database and users**
+SQL
+-- Create database
+CREATE DATABASE nof1;
+
+-- Create a user (optional, recommended)
+CREATE USER trading_user WITH PASSWORD 'your_secure_password';
+
+-- Grant permissions
+GRANT ALL PRIVILEGES ON DATABASE trading_db TO trading_user;
+
+-- Exit psql
+\q
+```
+
+3. **Record database connection information**
+- Database name: `nof1`
+- Username: `trading_user` (or `postgres`)
+- Password: The password you set
+- Host: `localhost`
+- Port: `5432`
+
+Step 4: Obtain the Binance API Key
+#### Virtual disk (recommended for beginners):
+
+1. Visit [Binance Virtual Disk](https://testnet.binancefuture.com/)
+2. Log in using your GitHub account
+3. Click on your profile picture in the upper right corner → API Key
+4. Create a new API Key
+5. Save the API Key and Secret Key
+
+Real-time trading:
+
+⚠️ **WARNING:** This trading session involves real money. Please trade with extreme caution!
+
+1. Log in to the [Binance website](https://www.binance.com/)
+2. Account → API Management
+3. Create an API Key
+4. **Important: Configure API permissions** (Failure to configure will result in an error)
+**Last Updated: November 3, 2025**
+- ✅ Enable spot and leveraged trading
+- ✅ Enable futures trading
+- ✅ Enable read permission
+5. **Configure an IP whitelist** (otherwise, transactions will not be possible)
+
+6. Save the API Key and Secret Key
+
+### Step 5: Obtain the AI ​​API Key (Optional)
+
+#### Option A: DeepSeek (Recommended)
+1. Visit the DeepSeek website (https://platform.deepseek.com/).
+2. Register an account and log in
+3. Go to the API Keys page
+4. Create a new API Key
+5. Save the API Key
+(It's best to use Deepseek; Openrouter doesn't need to be configured.)
+
+Option B: OpenRouter (generally not used)
+1. Visit [OpenRouter](https://openrouter.ai/)
+2. Register an account and log in
+3. Create an API Key
+
+4. Save the API Key
+
+Step 6: Clone the project
+bash
+# Cloning Repository
+
+git clone git@github.com:qingshungLI/Super-nof1.ai.git
+# Enter the project directory
+cd Super-nof1.ai
+
+```
+
+Step 7: Install project dependencies
+bash
+# Using npm
+
+npm install
+# Or use yarn
+
+yarn install
+# Or use pnpm (recommended, faster)
+npm install -g pnpm
+pnpm install
+
+```
+
+**Installation Time:** Depending on your network speed, it may take 5-15 minutes.
+**If you encounter network problems:**
+bash
+# Use domestic mirrors
+npm config set registry https://registry.npmmirror.com
+npm install
+
+```
+
+Step 8: Configure Environment Variables
+1. **Copy Environment Variable Template**
+bash
+# Windows
+
+copy .env.example .env
+# macOS/Linux
+cp .env.example .env
+
+```
+
+2. **Edit the `.env` file (configure the database, the four Binance keys, the trading mode, and the Deepseek API key)**
+
+Open the `.env` file using any text editor and fill in the following configuration:
+```env
+# ==========================================
+# Database Configuration
+# ==========================================
+# Format: postgresql://username:password@host:port/databasename
+**DATABASE_URL="postgresql://trading_user:(your_secure_password)@localhost:5432/nof1"**
+  
+Enter your password in #(your_secure_password) (remove the parentheses; they're for formatting). (nof1) can be replaced with your database name.
+# Proxy configuration (Access from mainland China requires a proxy and a non-Chinese, non-US IP address)
+# ==========================================
+# If you need to access the Binance API through a proxy (Calsh requires port 7890, V2Ray requires port 10809)
+BINANCE_HTTP_PROXY=http://127.0.0.1:7890
+# Set to true if no proxy is needed
+
+  
+# BINANCE_DISABLE_PROXY=true
+# ==========================================
+# Binance API Configuration (Important Update!)
+
+   
+# ==========================================
+# Virtual Disk API Configuration
+**BINANCE_TESTNET_API_KEY="Your Virtual Disk API Key"
+BINANCE_TESTNET_API_SECRET="Your Virtual Disk API Key Secret"**
+BINANCE_TESTNET_BASE_URL="https://demo-fapi.binance.com"
+#APIs need to retain quotes!
+# Live Trading API Configuration
+**BINANCE_LIVE_API_KEY="Your Live Trading API Key"
+BINANCE_LIVE_API_SECRET="Your Live Trading API Key Secret"**
+
+BINANCE_LIVE_BASE_URL="https://fapi.binance.com"
+# Request timeout (It is recommended to leave this unchanged, as it has been tested)
+   
+
+BINANCE_FETCH_TIMEOUT_MS="25000"
+# Trading Mode: Dry-run (virtual trading) or Live (real trading)
+# 💡 You only need to modify this one parameter to switch modes! The system will automatically use the corresponding API configuration.
+TRADING_MODE="dry-run"
+ 
+# If it's changed to "live," then it's real-time trading.
+# Risk Control Parameters (Risk control applicable to both virtual and live trading; user-configurable)
+MAX_POSITION_SIZE_USDT=5000 # Maximum position size in USDT (increased for aggressive strategy)
+MAX_LEVERAGE=30 # Maximum allowed leverage (increased to 30x for high-yield strategy)
+
+ 
+DAILY_LOSS_LIMIT_PERCENT=20 # Maximum daily loss limit as a percentage of capital (20% for aggressive trading)
+# ==========================================
+# AI Model Configuration
+# ==========================================
+# DeepSeek API Key (Recommended)
+
+**DEEPSEEK_API_KEY="Your DeepSeek Key"**
+# ==========================================
+# Application configuration (required)
+# ==========================================
+NEXT_PUBLIC_URL="http://localhost:3000"
+
+
+
+
+
+CRON_SECRET_KEY="secretkey_change_this_in_production"
+
+Step 9: Initialize the database
+bash
+# Generate Prisma client
+
+npx prisma generate
+# Create database table structure
+
+
+
+npx prisma db push
+**If you encounter a database connection error:**
+- Check if DATABASE_URL is correct.
+- Verify that the PostgreSQL service is running (if you find that you cannot connect to the database in pgAdmin after opening your computer (red cross), you need to open Services - PostgreSQL and start it by right-clicking).
+
+- Verify that the database password and database name are correct.
+
+Step 10: Start the project
+bash
+# Start Development Mode
+
+npm run dev
+# Or use yarn
+
+yarn dev
+# Or use pnpm
+pnpm dev
+
+```
+**After successful startup**:
+- Visit http://localhost:3000 to view the front-end interface
+- The system will automatically begin executing AI trading decisions (every 3 minutes).
+
+- The log will display: `🎮 Trading Mode: DRY-RUN (Virtual Trading)`
+**To switch between demo and live trading strategies:**
+
+
+
+- Simply configure both APIs in your .env file, then swap the TRADING_MODE (live) and dry-run settings.
+
+### Database Management
+Simply download and view it in the pgAdmin visual interface.
+<img width="1518" height="1143" alt="image" src="https://github.com/user-attachments/assets/1ec01f5d-ddc5-4922-911a-5981a02c7acb" />
+
+You can see data fluctuations in the dashboard at the top right, and perform queries using database languages ​​in SQL.
+
+## 📊 Detailed Explanation of Database Models
+### Chat Table (AI Decision Records)
+```prisma
+model Chat {
+id String @id @default(cuid())
+model String // AI model name
+chat String @db.Text // AI analysis content
+reasoning String? @db.Text // Reasoning process
+userPrompt String @db.Text // User prompt text
+tradings Trading[] // Related transactions
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+}
+
+```
+### Trading Table (Transaction Records)
+```prisma
+model Trading {
+id String @id @default(cuid())
+symbol String // Trading pair, such as BTC
+operation String // Operation: Buy/Sell/Hold
+pricing Float? // Price
+amount Float? // Quantity
+leverage Int? // Leverage ratio
+stopLossPercent Float? // Stop Loss Percent
+takeProfitPercent Float? // Profit-taking percentage
+orderId (String) // Order ID
+status String @default("pending") // Status
+pnl Float? // Profit and Loss
+exitReason String? // Exit reason
+chat Chat @relation(...)
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+}
+
+```
+### Metrics Table (Performance Metrics)
+```prisma
+model Metrics {
+id String @id @default(cuid())
+name String // Indicator name
+model String // Model version
+data Json // Metric data (JSON format)
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+}
+
+```
+### LessonLearned Table (Learning Feedback)
+```prisma
+model LessonLearned {
+id String @id @default(cuid())
+tradeId String // Associated transaction ID
+symbol String // Trading pair
+outcome String // Result: profit/loss
+pnl Float // Profit/Loss Amount
+lesson String @db.Text // The lesson learned
+Indicators Json // Technical Indicator Snapshot
+createdAt DateTime @default(now())
+}
+
+
+```
+
+## 🤝 Contribution Guidelines
+We welcome you to submit Issue and Pull Requests!
+
+
+
+Contact information: email: 2731468336@qq.com
+
+## 📄 License
+
+
+MIT License - See the [LICENSE](LICENSE) file for details.
+
+**Disclaimer:** This project is for learning and research purposes only and does not constitute any investment advice. Cryptocurrency trading carries a high degree of risk and may result in the loss of some or all of your principal. Users assume all risks associated with using this system for live trading. The developers are not responsible for any trading losses.
+**Risk Warning**:
+- 📉 The cryptocurrency market is extremely volatile and can cause significant losses in a short period of time.
+AI systems cannot guarantee profitability; past performance is not indicative of future results.
+- 💰 Only invest the amount you can afford to lose.
+
+- 📚 Please fully understand the relevant risks before investing.
+
+---
+Version: v1.0.0
+**Maintenance Status:** 🟢 Active Maintenance
+
+
+
+
+## 中文内容
 # Super NOF1.ai - AI 驱动的加密货币交易系统
 
 inspired by alpha arena和open-nof1.ai项目，本项目在open-nof1.ai基础之上全面改进（prompt,数据获取，添加了反馈逻辑，优化了Ui页面和图标显示），一个基于人工智能的自动化加密货币期货交易系统，使用 Next.js 构建，集成币安期货 API 和 DeepSeek AI 模型。之后我们将对算法、prompt、模型、分析方法和交易逻辑进行全面改进，欢迎持续关注！
