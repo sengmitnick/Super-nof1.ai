@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npm-run-all --parallel dev:next dev:cron",
     "dev:next": "next dev --turbopack",
-    "dev:cron": "nodemon --watch cron.ts --exec bun run cron.ts",
+    "dev:cron": "nodemon --watch cron.ts --exec tsx cron.ts",
     "build": "next build --turbopack",
     "build:docker": "prisma generate && next build",
     "start": "next start",
