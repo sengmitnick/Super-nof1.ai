@@ -20,7 +20,7 @@ while [ $attempt -lt $max_attempts ]; do
   attempt=$((attempt + 1))
   
   # 使用 Prisma 尝试连接数据库
-  if pnpm exec prisma db execute --stdin <<< "SELECT 1;" > /dev/null 2>&1; then
+  if echo "SELECT 1;" | pnpm exec prisma db execute --stdin > /dev/null 2>&1; then
     echo "✅ Database is ready!"
     break
   fi
