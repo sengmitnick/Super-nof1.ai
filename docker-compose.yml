@@ -22,9 +22,10 @@ services:
 
   # Super NOF1.ai 应用
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # 使用 GitHub Container Registry 的预构建镜像
+    # 格式: ghcr.io/你的GitHub用户名/super-nof1.ai:latest docker pull ghcr.io/sengmitnick/super-nof1.ai:latest
+    # 在 Dokploy 中设置环境变量 APP_IMAGE 来指定镜像
+    image: ${APP_IMAGE:-ghcr.io/sengmitnick/super-nof1.ai:latest}
     restart: unless-stopped
     depends_on:
       postgres:

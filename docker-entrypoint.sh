@@ -5,20 +5,44 @@ echo "🚀 Starting Super NOF1.ai..."
 
 # 等待数据库就绪
 echo "⏳ Waiting for PostgreSQL..."
-timeout=30
-counter=0
-until node -e "const { Client } = require('pg'); const client = new Client(process.env.DATABASE_URL); client.connect().then(() => { console.log('Connected'); client.end(); }).catch(() => process.exit(1));" 2>/dev/null || [ $counter -eq $timeout ]; do
-  counter=$((counter + 1))
-  echo "Waiting for database... ($counter/$timeout)"
+
+# 从 DATABASE_URL 中提取数据库信息
+DB_HOST=$(echo $DATABASE_URL | sed -n 's/.*@\([^:]*\):.*/\1/p')
+DB_PORT=$(echo $DATABASE_URL | sed -n 's/.*:\([0-9]*\)\/.*/\1/p')
+
+echo "📡 Connecting to database at $DB_HOST:$DB_PORT..."
+
+# 使用更长的超时和更好的重试逻辑
+max_attempts=60
+attempt=0
+
+while [ $attempt -lt $max_attempts ]; do
+  attempt=$((attempt + 1))
+  
+  # 使用 Prisma 尝试连接数据库
+  if pnpm exec prisma db execute --stdin <<< "SELECT 1;" > /dev/null 2>&1; then
+    echo "✅ Database is ready!"
+    break
+  fi
+  
+  # 每 5 秒显示一次进度
+  if [ $((attempt % 5)) -eq 0 ]; then
+    echo "⏳ Still waiting for database... (attempt $attempt/$max_attempts)"
+  fi
+  
+  # 最后一次尝试失败
+  if [ $attempt -eq $max_attempts ]; then
+    echo "❌ Database connection timeout after $max_attempts attempts!"
+    echo "📋 DATABASE_URL: $DATABASE_URL"
+    echo "🔍 Please check:"
+    echo "   - Database container is running"
+    echo "   - Network connectivity between containers"
+    echo "   - DATABASE_URL is correctly formatted"
+    exit 1
+  fi
+  
   sleep 1
 done
-
-if [ $counter -eq $timeout ]; then
-  echo "❌ Database connection timeout!"
-  exit 1
-fi
-
-echo "✅ Database is ready!"
 
 # 运行数据库迁移
 echo "🔄 Running database migrations..."
