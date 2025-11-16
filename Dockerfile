@@ -58,14 +58,14 @@ RUN useradd --system --uid 1001 -g nodejs nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/cron.ts ./cron.ts
 
-# 安装生产环境所需的额外依赖（用于运行 cron.ts 和 Prisma）
+# 复制 Prisma schema 和生成的 client（包含在 node_modules 中）
+COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+
+# 复制 cron 任务文件
+COPY --from=builder /app/cron.ts ./cron.ts
 
 # 复制启动脚本
 COPY docker-entrypoint.sh ./
