@@ -1,0 +1,67 @@
+# 依赖
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+bun.lock
+
+# Next.js
+.next/
+out/
+build
+dist
+
+# 生产构建
+.vercel
+
+# 环境变量
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 调试
+lerna-debug.log*
+
+# 操作系统
+.DS_Store
+*.pem
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# 测试
+coverage
+.nyc_output
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# 文档
+README.md
+*.md
+LICENSE
+
+# 其他
+.editorconfig
+.eslintrc.json
+.prettierrc
+positions.json
+screenshot.png
+screen-shot-2.png
+
