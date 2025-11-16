@@ -10,10 +10,11 @@ RUN corepack enable
 FROM base AS deps
 WORKDIR /app
 
-# 复制 package 文件
+# 复制 package 文件和 prisma schema（postinstall 需要）
 COPY package.json pnpm-lock.yaml .npmrc ./
+COPY prisma ./prisma
 
-# 使用 pnpm 安装依赖
+# 使用 pnpm 安装依赖（会自动执行 postinstall: prisma generate）
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # 构建阶段

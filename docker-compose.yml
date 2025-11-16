@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: nof1
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nof1-network
+
+  # Super NOF1.ai 应用
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # 数据库配置
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/nof1
+      
+      # 代理配置（如果需要）
+      BINANCE_HTTP_PROXY: ${BINANCE_HTTP_PROXY:-}
+      BINANCE_DISABLE_PROXY: ${BINANCE_DISABLE_PROXY:-}
+      
+      # 币安 API 配置
+      BINANCE_TESTNET_API_KEY: ${BINANCE_TESTNET_API_KEY}
+      BINANCE_TESTNET_API_SECRET: ${BINANCE_TESTNET_API_SECRET}
+      BINANCE_TESTNET_BASE_URL: ${BINANCE_TESTNET_BASE_URL:-https://demo-fapi.binance.com}
+      
+      BINANCE_LIVE_API_KEY: ${BINANCE_LIVE_API_KEY:-}
+      BINANCE_LIVE_API_SECRET: ${BINANCE_LIVE_API_SECRET:-}
+      BINANCE_LIVE_BASE_URL: ${BINANCE_LIVE_BASE_URL:-https://fapi.binance.com}
+      
+      BINANCE_FETCH_TIMEOUT_MS: ${BINANCE_FETCH_TIMEOUT_MS:-25000}
+      
+      # 交易模式
+      TRADING_MODE: ${TRADING_MODE:-dry-run}
+      
+      # 风险控制
+      MAX_POSITION_SIZE_USDT: ${MAX_POSITION_SIZE_USDT:-5000}
+      MAX_LEVERAGE: ${MAX_LEVERAGE:-30}
+      DAILY_LOSS_LIMIT_PERCENT: ${DAILY_LOSS_LIMIT_PERCENT:-20}
+      
+      # AI 模型配置
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      
+      # 应用配置
+      NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL:-http://localhost:3000}
+      CRON_SECRET_KEY: ${CRON_SECRET_KEY:-secretkey_change_this_in_production}
+      
+      # Node 环境
+      NODE_ENV: production
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    networks:
+      - nof1-network
+    # 如果需要访问宿主机的代理服务
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  nof1-network:
+    driver: bridge
+
