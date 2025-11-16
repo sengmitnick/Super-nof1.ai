@@ -1,15 +1,20 @@
 # 使用 Node.js 18 官方镜像（完整版，包含构建工具）
 FROM node:18 AS base
 
+# 启用 pnpm
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
 # 安装依赖阶段
 FROM base AS deps
 WORKDIR /app
 
 # 复制 package 文件
-COPY package.json package-lock.json* ./
+COPY package.json pnpm-lock.yaml .npmrc ./
 
-# 清理并安装依赖
-RUN npm ci --include=optional
+# 使用 pnpm 安装依赖
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # 构建阶段
 FROM base AS builder
@@ -20,11 +25,11 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # 生成 Prisma Client（在构建时生成）
-RUN npx prisma generate
+RUN pnpm exec prisma generate
 
 # 构建 Next.js 应用（不使用 turbopack 以避免兼容性问题）
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build:docker
+RUN pnpm run build:docker
 
 # 生产运行阶段（使用 slim 减小镜像体积）
 FROM node:18-slim AS runner
@@ -34,6 +39,11 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     openssl ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+# 启用 pnpm（运行阶段也需要）
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # 设置环境变量
 ENV NODE_ENV=production

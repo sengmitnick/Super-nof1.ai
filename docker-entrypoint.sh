@@ -22,7 +22,7 @@ echo "✅ Database is ready!"
 
 # 运行数据库迁移
 echo "🔄 Running database migrations..."
-npx prisma db push --skip-generate
+pnpm exec prisma db push --skip-generate
 
 # 启动 Next.js 服务器（后台运行）
 echo "🌐 Starting Next.js server..."
