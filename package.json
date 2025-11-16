@@ -14,6 +14,12 @@
     "test:binance-full": "tsx test-binance-official.ts",
     "setup:binance": "powershell -ExecutionPolicy Bypass -File ./setup-binance-official.ps1"
   },
+  "optionalDependencies": {
+    "@tailwindcss/oxide-linux-arm64-musl": "^4.0.1",
+    "@tailwindcss/oxide-linux-x64-musl": "^4.0.1",
+    "lightningcss-linux-arm64-musl": "^1.29.1",
+    "lightningcss-linux-x64-musl": "^1.29.1"
+  },
   "dependencies": {
     "@ai-sdk/deepseek": "^1.0.23",
     "@ai-sdk/openai-compatible": "^1.0.22",
