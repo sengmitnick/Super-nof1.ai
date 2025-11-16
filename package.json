@@ -7,12 +7,13 @@
     "dev:next": "next dev --turbopack",
     "dev:cron": "nodemon --watch cron.ts --exec bun run cron.ts",
     "build": "next build --turbopack",
-    "build:docker": "next build",
+    "build:docker": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "test:binance-proxy": "tsx test-binance-proxy.ts",
     "test:binance-full": "tsx test-binance-official.ts",
-    "setup:binance": "powershell -ExecutionPolicy Bypass -File ./setup-binance-official.ps1"
+    "setup:binance": "powershell -ExecutionPolicy Bypass -File ./setup-binance-official.ps1",
+    "postinstall": "prisma generate"
   },
   "optionalDependencies": {
     "@tailwindcss/oxide-linux-arm64-musl": "^4.0.1",
