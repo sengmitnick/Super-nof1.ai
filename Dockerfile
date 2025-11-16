@@ -52,7 +52,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # 创建非 root 用户
 RUN groupadd --system --gid 1001 nodejs
-RUN useradd --system --uid 1001 -g nodejs nextjs
+RUN useradd --system --uid 1001 -g nodejs nextjs --create-home
+
+# 创建并授权必要的目录
+RUN mkdir -p /home/nextjs/.cache/node/corepack && \
+    chown -R nextjs:nodejs /home/nextjs/.cache
 
 # 复制必要的文件
 COPY --from=builder /app/public ./public
