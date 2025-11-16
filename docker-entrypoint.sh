@@ -3,6 +3,10 @@ set -e
 
 echo "🚀 Starting Super NOF1.ai..."
 
+# 运行数据库迁移（生产环境使用 migrate deploy）
+echo "🔄 Running database migrations..."
+pnpm exec prisma migrate deploy
+
 # 启动 Next.js 服务器（后台运行）
 echo "🌐 Starting Next.js server..."
 node server.js &
