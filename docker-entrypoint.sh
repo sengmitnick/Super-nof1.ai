@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 echo "🚀 Starting Super NOF1.ai..."
@@ -18,7 +18,7 @@ sleep 5
 
 # 启动 Cron 任务
 echo "⏰ Starting Cron tasks..."
-node cron.ts &
+pnpm exec tsx cron.ts &
 CRON_PID=$!
 
 # 清理函数

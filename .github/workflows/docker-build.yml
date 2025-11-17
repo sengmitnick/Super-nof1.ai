@@ -85,4 +85,14 @@ jobs:
           echo "  --env-file .env \\" >> $GITHUB_STEP_SUMMARY
           echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+      - name: Trigger dokploy redeploy
+        env:
+          DOKPLOY_DEPLOY_URL: ${{ secrets.DOKPLOY_DEPLOY_URL }}
+        run: |
+          if [ -n "$DOKPLOY_DEPLOY_URL" ]; then
+            echo "🚀 Triggering dokploy redeploy..."
+            curl -X GET "$DOKPLOY_DEPLOY_URL"
+          else
+            echo "⏭️  Skipping dokploy redeploy (DOKPLOY_DEPLOY_URL not set)"
+          fi
 
